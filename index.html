@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To Be Number One Quiz Game</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f0f0f0; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .quiz-container { width: 400px; background-color: #fff; padding: 20px; border-radius: 5px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
+        .question { margin-bottom: 15px; font-size: 18px; }
+        .options { list-style: none; padding: 0; }
+        .option { background-color: #e9e9e9; margin-bottom: 5px; padding: 10px; border-radius: 3px; cursor: pointer; }
+        .option:hover { background-color: #dcdcdc; }
+        .result { text-align: center; margin-top: 20px; font-size: 20px; }
+        .answer { display: none; color: green; font-size: 16px; }
+        .incorrect-answer { display: none; color: red; font-size: 16px; }
+        .summary { margin-top: 20px; text-align: center; }
+        #next { margin-top: 10px; padding: 5px 10px; }
+        .selected-correct { background-color: green !important; color: white; }
+        .selected-incorrect { background-color: red !important; color: white; }
+    </style>
+</head>
+<body>
+    <div class="quiz-container">
+        <div class="question-container">
+            <div class="question" id="question"></div>
+            <ul class="options" id="options"></ul>
+            <div class="answer" id="correct-answer"></div>
+            <button id="next" style="display: none;" onclick="nextQuestion()">ต่อไป</button>
+        </div>
+        <div class="result" id="result"></div>
+        <div class="summary" id="summary"></div>
+    </div>
+
+    <script type="text/javascript">
+        const questions = [
+            {
+                question:  "ข้อที่ 1 โครงการ TO BE NUMBER ONE มีวัตถุประสงค์หลักเพื่อ?",
+                options: ["ก. ส่งเสริมการท่องเที่ยว", "ข. สร้างสรรค์นวัตกรรมใหม่ๆ", "ค. แก้ไขปัญหายาเสพติดในเยาวชน", "ง. พัฒนาอุตสาหกรรมในประเทศ"],
+                answer: "ค. แก้ไขปัญหายาเสพติดในเยาวชน"
+            },
+            {
+                question: "ข้อที่ 2 กลุ่มเป้าหมายหลักของโครงการ TO BE NUMBER ONE คือ?",
+                options: ["ก. ผู้สูงอายุ", "ข. เด็กเล็ก", "ค. เยาวชน", "ง. ผู้ประกอบการ"],
+                answer: "ค. เยาวชน"
+            },
+            {
+                question: "ข้อที่ 3 กิจกรรมหลักของโครงการ TO BE NUMBER ONE คืออะไร?",
+                options: ["ก. การแข่งขันกีฬา", "ข. การจัดอบรมด้านวิชาการ", "ค. การจัดกิจกรรมสร้างสรรค์และให้ความรู้", "ง. การจัดงานเลี้ยงสังสรรค์"],
+                answer: "ค. การจัดกิจกรรมสร้างสรรค์และให้ความรู้"
+            },
+            {
+                question: "ข้อที่ 4 โครงการ TO BE NUMBER ONE มีการจัดตั้งอะไรขึ้นเพื่อให้เยาวชนเข้าถึงได้ง่าย?",
+                options: ["ก. สวนสาธารณะ", "ข. ศูนย์การค้า", "ค. ศูนย์เพื่อนใจ", "ง. โรงเรียน"],
+                answer: "ค. ศูนย์เพื่อนใจ"
+            },
+            {
+                question: "ข้อที่ 5 คำขวัญของโครงการ TO BE NUMBER ONE คืออะไร?",
+                options: ["ก. เป็นหนึ่งโดยไม่พึ่งยาเสพติด", "ข. สุขภาพดี ชีวิตดี", "ค. เรียนรู้ พัฒนา สร้างสรรค์", "ง. รวมใจไทย ไม่ใช้ยาเสพติด"],
+                answer: "ก. เป็นหนึ่งโดยไม่พึ่งยาเสพติด"
+            },
+            {
+                question: "ข้อที่ 6 โครงการ TO BE NUMBER ONE ได้รับการสนับสนุนจากใคร?",
+                options: ["ก. ภาคเอกชนเท่านั้น", "ข. ภาคประชาชนเท่านั้น", "ค. ภาครัฐและภาคประชาชน", "ง. ไม่มีใครสนับสนุน"],
+                answer: "ค. ภาครัฐและภาคประชาชน"
+            },
+            {
+                question: "ข้อที่ 7 กิจกรรมใดที่ไม่ใช่ส่วนหนึ่งของโครงการ TO BE NUMBER ONE?",
+                options: ["ก. การแข่งขัน TO BE NUMBER ONE TEEN DANCERCISE", "ข. การจัดอบรมผู้นำเยาวชน", "ค. การจัดงานคอนเสิร์ตเพื่อหารายได้", "ง. การจัดกิจกรรมค่ายเยาวชน"],
+                answer: "ค. การจัดงานคอนเสิร์ตเพื่อหารายได้"
+            },
+            {
+                question: "ข้อที่ 8 เป้าหมายสูงสุดของโครงการ TO BE NUMBER ONE คืออะไร?",
+                options: ["ก. ลดจำนวนผู้ติดยาเสพติด", "ข. สร้างความเท่าเทียมในสังคม", "ค. พัฒนาเศรษฐกิจของประเทศ", "ง. เพิ่มจำนวนนักกีฬาอาชีพ"],
+                answer: "ก. ลดจำนวนผู้ติดยาเสพติด"
+            },
+            {
+                question: "ข้อที่ 9 ใครเป็นประธานโครงการ TO BE NUMBER ONE?",
+                options: ["ก. นายกรัฐมนตรี", "ข. ทูลกระหม่อมหญิงอุบลรัตนราชกัญญา สิริวัฒนาพรรณวดี", "ค. รัฐมนตรีว่าการกระทรวงสาธารณสุข", "ง. ผู้ว่าราชการจังหวัด"],
+                answer: "ข. ทูลกระหม่อมหญิงอุบลรัตนราชกัญญา สิริวัฒนาพรรณวดี"
+            },
+            {
+                question: "ข้อที่ 10 โครงการ TO BE NUMBER ONE มีความสำคัญอย่างไรต่อสังคม?",
+                options: ["ก. ช่วยลดปัญหาอาชญากรรม", "ข. ช่วยพัฒนาคุณภาพชีวิตของประชาชน", "ค. ช่วยสร้างเสริมภาพลักษณ์ที่ดีของประเทศ", "ง. ทั้งหมดถูกต้อง"],
+                answer: "ง. ทั้งหมดถูกต้อง"
+            }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+        let answered = false;
+
+        function loadQuestion() {
+            if (currentQuestion < questions.length) {
+                document.getElementById('question').textContent = questions[currentQuestion].question;
+                const options = document.getElementById('options');
+                options.innerHTML = '';
+                questions[currentQuestion].options.forEach(option => {
+                    const li = document.createElement('li');
+                    li.classList.add('option');
+                    li.textContent = option;
+                    li.onclick = () => selectOption(option);
+                    options.appendChild(li);
+                });
+                document.getElementById('next').style.display = 'none';
+                document.getElementById('correct-answer').style.display = 'none';
+                answered = false;
+            } else {
+                showFinalResult();
+            }
+        }
+
+        function selectOption(selectedOption) {
+            if (answered) return;
+
+            answered = true;
+            const correctAnswer = questions[currentQuestion].answer;
+            const options = document.getElementsByClassName('option');
+            
+            for (let i = 0; i < options.length; i++) {
+                if (options[i].textContent === correctAnswer) {
+                    options[i].classList.add('selected-correct');
+                    if (options[i].textContent === selectedOption) {
+                        score++;
+                    }
+                }
+                
+                if (options[i].textContent === selectedOption && selectedOption !== correctAnswer) {
+                    options[i].classList.add('selected-incorrect');
+                }
+            }
+            
+            document.getElementById('correct-answer').textContent = `เฉลย: ${correctAnswer}`;
+            document.getElementById('correct-answer').style.display = 'block';
+            document.getElementById('next').style.display = 'block';
+        }
+
+        function nextQuestion() {
+            currentQuestion++;
+            loadQuestion();
+        }
+
+        function showFinalResult() {
+            const resultContainer = document.querySelector('.quiz-container');
+            resultContainer.innerHTML = `
+                <div class="result">
+                    <h2>ผลคะแนนของคุณ</h2>
+                    <p>คุณได้คะแนน ${score} จาก ${questions.length} คำถาม</p>
+                    <p>${getResultMessage(score, questions.length)}</p>
+                </div>
+            `;
+        }
+
+        function getResultMessage(score, total) {
+            const percentage = (score / total) * 100;
+            if (percentage === 100) {
+                return "คุณเป็นผู้เชี่ยวชาญโครงการ TO BE NUMBER ONE!";
+            } else if (percentage >= 80) {
+                return "คุณมีความรู้เกี่ยวกับโครงการ TO BE NUMBER ONE ในระดับดีมาก!";
+            } else if (percentage >= 60) {
+                return "คุณมีความรู้เกี่ยวกับโครงการ TO BE NUMBER ONE ในระดับดี";
+            } else if (percentage >= 40) {
+                return "คุณควรศึกษาเพิ่มเติมเกี่ยวกับโครงการ TO BE NUMBER ONE";
+            } else {
+                return "คุณยังต้องเรียนรู้เพิ่มเติมเกี่ยวกับโครงการ TO BE NUMBER ONE";
+            }
+        }
+
+        window.onload = loadQuestion;
+    </script>
+</body>
+</html>
